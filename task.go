@@ -116,6 +116,7 @@ func ParseTask(text string) (*Task, error) {
 	task := Task{}
 	task.Original = strings.Trim(text, "\t\n\r ")
 	task.Todo = task.Original
+	task.AdditionalTags = make(map[string]string)
 
 	// Check for completed
 	if completedRx.MatchString(task.Original) {
