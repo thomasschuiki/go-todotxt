@@ -43,6 +43,14 @@ func (tasklist TaskList) String() (text string) {
 	return text
 }
 
+// Display returns a complete list of tasks with their internal IDs.
+func (tasklist TaskList) Display() (text string) {
+	for _, task := range tasklist {
+		text += fmt.Sprintf("[%d] %s\n", task.Id ,task.String())
+	}
+	return text
+}
+
 // AddTask appends a Task to the current TaskList and takes care to set the
 // Task.Id correctly, modifying the Task by the given pointer!
 func (tasklist *TaskList) AddTask(task *Task) {
