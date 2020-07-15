@@ -16,14 +16,25 @@ var (
 	// DateLayout is used for formatting time.Time into todo.txt date format and vice-versa.
 	DateLayout = "2006-01-02"
 
-	priorityRx = regexp.MustCompile(`^(x|x \d{4}-\d{2}-\d{2}|)\s*\(([A-Z])\)\s+`) // Match priority: '(A) ...' or 'x (A) ...' or 'x 2012-12-12 (A) ...'
-	// Match created date: '(A) 2012-12-12 ...' or 'x 2012-12-12 (A) 2012-12-12 ...' or 'x (A) 2012-12-12 ...'or 'x 2012-12-12 2012-12-12 ...' or '2012-12-12 ...'
+	// Match priority: '(A) ...' or 'x (A) ...' or 'x 2012-12-12 (A) ...'
+	priorityRx = regexp.MustCompile(`^(x|x \d{4}-\d{2}-\d{2}|)\s*\(([A-Z])\)\s+`)
+	
+	// Match created date: '(A) 2012-12-12 ...' 
+	// or 'x 2012-12-12 (A) 2012-12-12 ...'
+	// or 'x (A) 2012-12-12 ...'
+	// or 'x 2012-12-12 2012-12-12 ...'
+	// or '2012-12-12 ...'
 	createdDateRx   = regexp.MustCompile(`^(\([A-Z]\)|x \d{4}-\d{2}-\d{2} \([A-Z]\)|x \([A-Z]\)|x \d{4}-\d{2}-\d{2}|)\s*(\d{4}-\d{2}-\d{2})\s+`)
-	completedRx     = regexp.MustCompile(`^x\s+`)                       // Match completed: 'x ...'
-	completedDateRx = regexp.MustCompile(`^x\s*(\d{4}-\d{2}-\d{2})\s+`) // Match completed date: 'x 2012-12-12 ...'
-	addonTagRx      = regexp.MustCompile(`(^|\s+)([\w-]+):(\S+)`)       // Match additional tags date: '... due:2012-12-12 ...'
-	contextRx       = regexp.MustCompile(`(^|\s+)@(\S+)`)               // Match contexts: '@Context ...' or '... @Context ...'
-	projectRx       = regexp.MustCompile(`(^|\s+)\+(\S+)`)              // Match projects: '+Project...' or '... +Project ...')
+	// Match completed: 'x ...'
+	completedRx     = regexp.MustCompile(`^x\s+`)                       
+	// Match completed date: 'x 2012-12-12 ...'
+	completedDateRx = regexp.MustCompile(`^x\s*(\d{4}-\d{2}-\d{2})\s+`) 
+	// Match additional tags date: '... due:2012-12-12 ...'
+	addonTagRx      = regexp.MustCompile(`(^|\s+)([\w-]+):(\w\S*)`)     
+	// Match contexts: '@Context ...' or '... @Context ...'
+	contextRx       = regexp.MustCompile(`(^|\s+)@(\S+)`)               
+	// Match projects: '+Project...' or '... +Project ...')
+	projectRx       = regexp.MustCompile(`(^|\s+)\+(\S+)`)              
 )
 
 // Task represents a todo.txt task entry.
@@ -116,6 +127,7 @@ func ParseTask(text string) (*Task, error) {
 	task := Task{}
 	task.Original = strings.Trim(text, "\t\n\r ")
 	task.Todo = task.Original
+	task.AdditionalTags = make(map[string]string)
 
 	// Check for completed
 	if completedRx.MatchString(task.Original) {

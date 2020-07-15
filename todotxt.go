@@ -19,7 +19,7 @@ import (
 
 // TaskList represents a list of todo.txt task entries.
 // It is usually loaded from a whole todo.txt file.
-type TaskList []Task
+type TaskList []*Task
 
 // IgnoreComments can be set to 'false', in order to revert to a more standard todo.txt behaviour.
 // The todo.txt format does not define comments.
@@ -43,7 +43,16 @@ func (tasklist TaskList) String() (text string) {
 	return text
 }
 
-// AddTask appends a Task to the current TaskList and takes care to set the Task.Id correctly, modifying the Task by the given pointer!
+// Display returns a complete list of tasks with their internal IDs.
+func (tasklist TaskList) Display() (text string) {
+	for _, task := range tasklist {
+		text += fmt.Sprintf("[%d] %s\n", task.Id ,task.String())
+	}
+	return text
+}
+
+// AddTask appends a Task to the current TaskList and takes care to set the
+// Task.Id correctly, modifying the Task by the given pointer!
 func (tasklist *TaskList) AddTask(task *Task) {
 	task.Id = 0
 	for _, t := range *tasklist {
@@ -53,15 +62,16 @@ func (tasklist *TaskList) AddTask(task *Task) {
 	}
 	task.Id += 1
 
-	*tasklist = append(*tasklist, *task)
+	*tasklist = append(*tasklist, task)
 }
 
-// GetTask returns a Task by given task 'id' from the TaskList. The returned Task pointer can be used to update the Task inside the TaskList.
+// GetTask returns a Task by given task 'id' from the TaskList. 
+// The returned Task pointer can be used to update the Task inside the TaskList.
 // Returns an error if Task could not be found.
-func (tasklist *TaskList) GetTask(id int) (*Task, error) {
-	for i := range *tasklist {
-		if ([]Task(*tasklist))[i].Id == id {
-			return &([]Task(*tasklist))[i], nil
+func (tasklist TaskList) GetTask(id int) (*Task, error) {
+	for i := range tasklist {
+		if tasklist[i].Id == id {
+			return tasklist[i], nil
 		}
 	}
 	return nil, errors.New("task not found")
@@ -88,7 +98,8 @@ func (tasklist *TaskList) RemoveTaskById(id int) error {
 	return nil
 }
 
-// RemoveTask removes any Task from the TaskList with the same String representation as the given Task.
+// RemoveTask removes any Task from the TaskList with the same String
+// representation as the given Task.
 // Returns an error if no Task was removed.
 func (tasklist *TaskList) RemoveTask(task Task) error {
 	var newList TaskList
@@ -109,9 +120,10 @@ func (tasklist *TaskList) RemoveTask(task Task) error {
 	return nil
 }
 
-// Filter filters the current TaskList for the given predicate (a function that takes a task as input and returns a bool),
+// Filter filters the current TaskList for the given predicate
+// (a function that takes a task as input and returns a bool),
 // and returns a new TaskList. The original TaskList is not modified.
-func (tasklist *TaskList) Filter(predicate func(Task) bool) *TaskList {
+func (tasklist *TaskList) Filter(predicate func(*Task) bool) *TaskList {
 	var newList TaskList
 	for _, t := range *tasklist {
 		if predicate(t) {
@@ -125,9 +137,10 @@ func (tasklist *TaskList) Filter(predicate func(Task) bool) *TaskList {
 //
 // Using *os.File instead of a filename allows to also use os.Stdin.
 //
-// Note: This will clear the current TaskList and overwrite it's contents with whatever is in *os.File.
+// Note: This will clear the current TaskList and 
+// overwrite it's contents with whatever is in *os.File.
 func (tasklist *TaskList) LoadFromFile(file *os.File) error {
-	*tasklist = []Task{} // Empty tasklist
+	*tasklist = []*Task{} // Empty tasklist
 
 	taskId := 1
 	scanner := bufio.NewScanner(file)
@@ -145,7 +158,7 @@ func (tasklist *TaskList) LoadFromFile(file *os.File) error {
 		}
 		task.Id = taskId
 
-		*tasklist = append(*tasklist, *task)
+		*tasklist = append(*tasklist, task)
 		taskId++
 	}
 	if err := scanner.Err(); err != nil {

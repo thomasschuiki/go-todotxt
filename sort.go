@@ -54,7 +54,7 @@ func (ts *tasklistSort) Swap(l, r int) {
 }
 
 func (ts *tasklistSort) Less(l, r int) bool {
-	return ts.by(&ts.tasklists[l], &ts.tasklists[r])
+	return ts.by(ts.tasklists[l], ts.tasklists[r])
 }
 
 func (tasklist *TaskList) sortBy(by func(t1, t2 *Task) bool) *TaskList {
