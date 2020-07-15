@@ -241,18 +241,18 @@ func TestTaskListAddTask(t *testing.T) {
 		t.Errorf("Expected TaskList to contain %d tasks, but got %d", testExpected, testGot)
 	}
 
-	taskId := 64
+	taskID := 64
 	testExpected = time.Now().Format(DateLayout) + " " // tasks created by NewTask() have their created date set
-	testGot = testTasklist[taskId-1].String()
+	testGot = testTasklist[taskID-1].String()
 	if testGot != testExpected {
-		t.Errorf("Expected Task[%d] to be [%s], but got [%s]", taskId, testExpected, testGot)
+		t.Errorf("Expected Task[%d] to be [%s], but got [%s]", taskID, testExpected, testGot)
 	}
 	testExpected = 64
-	testGot = testTasklist[taskId-1].Id
+	testGot = testTasklist[taskID-1].ID
 	if testGot != testExpected {
-		t.Errorf("Expected Task[%d] to be [%d], but got [%d]", taskId, testExpected, testGot)
+		t.Errorf("Expected Task[%d] to be [%d], but got [%d]", taskID, testExpected, testGot)
 	}
-	taskId++
+	taskID++
 
 	// add parsed task
 	parsed, err := ParseTask("x (C) 2014-01-01 Create golang library documentation @Go +go-todotxt due:2014-01-12")
@@ -262,16 +262,16 @@ func TestTaskListAddTask(t *testing.T) {
 	testTasklist.AddTask(parsed)
 
 	testExpected = "x (C) 2014-01-01 Create golang library documentation @Go +go-todotxt due:2014-01-12"
-	testGot = testTasklist[taskId-1].String()
+	testGot = testTasklist[taskID-1].String()
 	if testGot != testExpected {
-		t.Errorf("Expected Task[%d] to be [%s], but got [%s]", taskId, testExpected, testGot)
+		t.Errorf("Expected Task[%d] to be [%s], but got [%s]", taskID, testExpected, testGot)
 	}
 	testExpected = 65
-	testGot = testTasklist[taskId-1].Id
+	testGot = testTasklist[taskID-1].ID
 	if testGot != testExpected {
-		t.Errorf("Expected Task[%d] to be [%d], but got [%d]", taskId, testExpected, testGot)
+		t.Errorf("Expected Task[%d] to be [%d], but got [%d]", taskID, testExpected, testGot)
 	}
-	taskId++
+	taskID++
 
 	// add selfmade task
 	createdDate := time.Now()
@@ -282,28 +282,28 @@ func TestTaskListAddTask(t *testing.T) {
 	})
 
 	testExpected = createdDate.Format(DateLayout) + " Go shopping.. @GroceryStore"
-	testGot = testTasklist[taskId-1].String()
+	testGot = testTasklist[taskID-1].String()
 	if testGot != testExpected {
-		t.Errorf("Expected Task[%d] to be [%s], but got [%s]", taskId, testExpected, testGot)
+		t.Errorf("Expected Task[%d] to be [%s], but got [%s]", taskID, testExpected, testGot)
 	}
 	testExpected = 66
-	testGot = testTasklist[taskId-1].Id
+	testGot = testTasklist[taskID-1].ID
 	if testGot != testExpected {
-		t.Errorf("Expected Task[%d] to be [%d], but got [%d]", taskId, testExpected, testGot)
+		t.Errorf("Expected Task[%d] to be [%d], but got [%d]", taskID, testExpected, testGot)
 	}
-	taskId++
+	taskID++
 
-	// add task with explicit Id, AddTask() should ignore this!
+	// add task with explicit ID, AddTask() should ignore this!
 	testTasklist.AddTask(&Task{
-		Id: 101,
+		ID: 101,
 	})
 
 	testExpected = 67
-	testGot = testTasklist[taskId-1].Id
+	testGot = testTasklist[taskID-1].ID
 	if testGot != testExpected {
-		t.Errorf("Expected Task[%d] to be [%d], but got [%d]", taskId, testExpected, testGot)
+		t.Errorf("Expected Task[%d] to be [%d], but got [%d]", taskID, testExpected, testGot)
 	}
-	taskId++
+	taskID++
 }
 
 func TestTaskListGetTask(t *testing.T) {
@@ -311,22 +311,22 @@ func TestTaskListGetTask(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	taskId := 3
-	task, err := testTasklist.GetTask(taskId)
+	taskID := 3
+	task, err := testTasklist.GetTask(taskID)
 	if err != nil {
 		t.Error(err)
 	}
 	testExpected = "(B) 2013-12-01 Outline chapter 5 @Computer +Novel Level:5 private:false due:2014-02-17"
 	testGot = task.String()
 	if testGot != testExpected {
-		t.Errorf("Expected Task[%d] to be [%s], but got [%s]", taskId, testExpected, testGot)
+		t.Errorf("Expected Task[%d] to be [%s], but got [%s]", taskID, testExpected, testGot)
 	}
 	testExpected = 3
-	testGot = testTasklist[taskId-1].Id
+	testGot = testTasklist[taskID-1].ID
 	if testGot != testExpected {
-		t.Errorf("Expected Task[%d] to be [%d], but got [%d]", taskId, testExpected, testGot)
+		t.Errorf("Expected Task[%d] to be [%d], but got [%d]", taskID, testExpected, testGot)
 	}
-	taskId++
+	taskID++
 }
 
 func TestTaskListUpdateTask(t *testing.T) {
@@ -334,20 +334,20 @@ func TestTaskListUpdateTask(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	taskId := 3
-	task, err := testTasklist.GetTask(taskId)
+	taskID := 3
+	task, err := testTasklist.GetTask(taskID)
 	if err != nil {
 		t.Error(err)
 	}
 	testExpected = "(B) 2013-12-01 Outline chapter 5 @Computer +Novel Level:5 private:false due:2014-02-17"
 	testGot = task.String()
 	if testGot != testExpected {
-		t.Errorf("Expected Task[%d] to be [%s], but got [%s]", taskId, testExpected, testGot)
+		t.Errorf("Expected Task[%d] to be [%s], but got [%s]", taskID, testExpected, testGot)
 	}
 	testExpected = 3
-	testGot = testTasklist[taskId-1].Id
+	testGot = testTasklist[taskID-1].ID
 	if testGot != testExpected {
-		t.Errorf("Expected Task[%d] to be [%d], but got [%d]", taskId, testExpected, testGot)
+		t.Errorf("Expected Task[%d] to be [%d], but got [%d]", taskID, testExpected, testGot)
 	}
 
 	task.Priority = "C"
@@ -366,7 +366,7 @@ func TestTaskListUpdateTask(t *testing.T) {
 	if err := testTasklist.LoadFromFilename(testOutput); err != nil {
 		t.Fatal(err)
 	}
-	testExpected, err := testTasklist.GetTask(taskId)
+	testExpected, err := testTasklist.GetTask(taskID)
 	if err != nil {
 		t.Error(err)
 	}
@@ -375,13 +375,13 @@ func TestTaskListUpdateTask(t *testing.T) {
 	}
 }
 
-func TestTaskListRemoveTaskById(t *testing.T) {
+func TestTaskListRemoveTaskByID(t *testing.T) {
 	if err := testTasklist.LoadFromFilename(testInputTasklist); err != nil {
 		t.Fatal(err)
 	}
 
-	taskId := 10
-	if err := testTasklist.RemoveTaskById(taskId); err != nil {
+	taskID := 10
+	if err := testTasklist.RemoveTaskByID(taskID); err != nil {
 		t.Error(err)
 	}
 	testExpected = 62
@@ -389,13 +389,13 @@ func TestTaskListRemoveTaskById(t *testing.T) {
 	if testGot != testExpected {
 		t.Errorf("Expected TaskList to contain %d tasks, but got %d", testExpected, testGot)
 	}
-	task, err := testTasklist.GetTask(taskId)
+	task, err := testTasklist.GetTask(taskID)
 	if err == nil || task != nil {
 		t.Errorf("Expected no Task to be found anymore, but got %v", task)
 	}
 
-	taskId = 27
-	if err := testTasklist.RemoveTaskById(taskId); err != nil {
+	taskID = 27
+	if err := testTasklist.RemoveTaskByID(taskID); err != nil {
 		t.Error(err)
 	}
 	testExpected = 61
@@ -403,13 +403,13 @@ func TestTaskListRemoveTaskById(t *testing.T) {
 	if testGot != testExpected {
 		t.Errorf("Expected TaskList to contain %d tasks, but got %d", testExpected, testGot)
 	}
-	task, err = testTasklist.GetTask(taskId)
+	task, err = testTasklist.GetTask(taskID)
 	if err == nil || task != nil {
 		t.Errorf("Expected no Task to be found anymore, but got %v", task)
 	}
 
-	taskId = 99
-	if err := testTasklist.RemoveTaskById(taskId); err == nil {
+	taskID = 99
+	if err := testTasklist.RemoveTaskByID(taskID); err == nil {
 		t.Errorf("Expected no Task to be found for removal")
 	}
 }
@@ -419,8 +419,8 @@ func TestTaskListRemoveTask(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	taskId := 52 // Is "unique" in tasklist
-	task, err := testTasklist.GetTask(taskId)
+	taskID := 52 // Is "unique" in tasklist
+	task, err := testTasklist.GetTask(taskID)
 	if err != nil {
 		t.Error(err)
 	}
@@ -433,13 +433,13 @@ func TestTaskListRemoveTask(t *testing.T) {
 	if testGot != testExpected {
 		t.Errorf("Expected TaskList to contain %d tasks, but got %d", testExpected, testGot)
 	}
-	task, err = testTasklist.GetTask(taskId)
+	task, err = testTasklist.GetTask(taskID)
 	if err == nil || task != nil {
 		t.Errorf("Expected no Task to be found anymore, but got %v", task)
 	}
 
-	taskId = 2 // Exists 3 times in tasklist
-	task, err = testTasklist.GetTask(taskId)
+	taskID = 2 // Exists 3 times in tasklist
+	task, err = testTasklist.GetTask(taskID)
 	if err != nil {
 		t.Error(err)
 	}
@@ -452,7 +452,7 @@ func TestTaskListRemoveTask(t *testing.T) {
 	if testGot != testExpected {
 		t.Errorf("Expected TaskList to contain %d tasks, but got %d", testExpected, testGot)
 	}
-	task, err = testTasklist.GetTask(taskId)
+	task, err = testTasklist.GetTask(taskID)
 	if err == nil || task != nil {
 		t.Errorf("Expected no Task to be found anymore, but got %v", task)
 	}

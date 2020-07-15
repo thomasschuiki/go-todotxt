@@ -18,28 +18,28 @@ var (
 
 	// Match priority: '(A) ...' or 'x (A) ...' or 'x 2012-12-12 (A) ...'
 	priorityRx = regexp.MustCompile(`^(x|x \d{4}-\d{2}-\d{2}|)\s*\(([A-Z])\)\s+`)
-	
-	// Match created date: '(A) 2012-12-12 ...' 
+
+	// Match created date: '(A) 2012-12-12 ...'
 	// or 'x 2012-12-12 (A) 2012-12-12 ...'
 	// or 'x (A) 2012-12-12 ...'
 	// or 'x 2012-12-12 2012-12-12 ...'
 	// or '2012-12-12 ...'
-	createdDateRx   = regexp.MustCompile(`^(\([A-Z]\)|x \d{4}-\d{2}-\d{2} \([A-Z]\)|x \([A-Z]\)|x \d{4}-\d{2}-\d{2}|)\s*(\d{4}-\d{2}-\d{2})\s+`)
+	createdDateRx = regexp.MustCompile(`^(\([A-Z]\)|x \d{4}-\d{2}-\d{2} \([A-Z]\)|x \([A-Z]\)|x \d{4}-\d{2}-\d{2}|)\s*(\d{4}-\d{2}-\d{2})\s+`)
 	// Match completed: 'x ...'
-	completedRx     = regexp.MustCompile(`^x\s+`)                       
+	completedRx = regexp.MustCompile(`^x\s+`)
 	// Match completed date: 'x 2012-12-12 ...'
-	completedDateRx = regexp.MustCompile(`^x\s*(\d{4}-\d{2}-\d{2})\s+`) 
+	completedDateRx = regexp.MustCompile(`^x\s*(\d{4}-\d{2}-\d{2})\s+`)
 	// Match additional tags date: '... due:2012-12-12 ...'
-	addonTagRx      = regexp.MustCompile(`(^|\s+)([\w-]+):(\w\S*)`)     
+	addonTagRx = regexp.MustCompile(`(^|\s+)([\w-]+):(\w\S*)`)
 	// Match contexts: '@Context ...' or '... @Context ...'
-	contextRx       = regexp.MustCompile(`(^|\s+)@(\S+)`)               
+	contextRx = regexp.MustCompile(`(^|\s+)@(\S+)`)
 	// Match projects: '+Project...' or '... +Project ...')
-	projectRx       = regexp.MustCompile(`(^|\s+)\+(\S+)`)              
+	projectRx = regexp.MustCompile(`(^|\s+)\+(\S+)`)
 )
 
 // Task represents a todo.txt task entry.
 type Task struct {
-	Id             int    // Internal task id.
+	ID             int    // Internal task id.
 	Original       string // Original raw task text.
 	Todo           string // Todo part of task text.
 	Priority       string

@@ -46,45 +46,45 @@ func (tasklist TaskList) String() (text string) {
 // Display returns a complete list of tasks with their internal IDs.
 func (tasklist TaskList) Display() (text string) {
 	for _, task := range tasklist {
-		text += fmt.Sprintf("[%d] %s\n", task.Id ,task.String())
+		text += fmt.Sprintf("[%d] %s\n", task.ID, task.String())
 	}
 	return text
 }
 
 // AddTask appends a Task to the current TaskList and takes care to set the
-// Task.Id correctly, modifying the Task by the given pointer!
+// Task.ID correctly, modifying the Task by the given pointer!
 func (tasklist *TaskList) AddTask(task *Task) {
-	task.Id = 0
+	task.ID = 0
 	for _, t := range *tasklist {
-		if t.Id > task.Id {
-			task.Id = t.Id
+		if t.ID > task.ID {
+			task.ID = t.ID
 		}
 	}
-	task.Id += 1
+	task.ID++
 
 	*tasklist = append(*tasklist, task)
 }
 
-// GetTask returns a Task by given task 'id' from the TaskList. 
+// GetTask returns a Task by given task 'id' from the TaskList.
 // The returned Task pointer can be used to update the Task inside the TaskList.
 // Returns an error if Task could not be found.
 func (tasklist TaskList) GetTask(id int) (*Task, error) {
 	for i := range tasklist {
-		if tasklist[i].Id == id {
+		if tasklist[i].ID == id {
 			return tasklist[i], nil
 		}
 	}
 	return nil, errors.New("task not found")
 }
 
-// RemoveTaskById removes any Task with given Task 'id' from the TaskList.
+// RemoveTaskByID removes any Task with given Task 'id' from the TaskList.
 // Returns an error if no Task was removed.
-func (tasklist *TaskList) RemoveTaskById(id int) error {
+func (tasklist *TaskList) RemoveTaskByID(id int) error {
 	var newList TaskList
 
 	found := false
 	for _, t := range *tasklist {
-		if t.Id != id {
+		if t.ID != id {
 			newList = append(newList, t)
 		} else {
 			found = true
@@ -137,12 +137,12 @@ func (tasklist *TaskList) Filter(predicate func(*Task) bool) *TaskList {
 //
 // Using *os.File instead of a filename allows to also use os.Stdin.
 //
-// Note: This will clear the current TaskList and 
+// Note: This will clear the current TaskList and
 // overwrite it's contents with whatever is in *os.File.
 func (tasklist *TaskList) LoadFromFile(file *os.File) error {
 	*tasklist = []*Task{} // Empty tasklist
 
-	taskId := 1
+	taskID := 1
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		text := strings.Trim(scanner.Text(), "\t\n\r ") // Read line
@@ -156,10 +156,10 @@ func (tasklist *TaskList) LoadFromFile(file *os.File) error {
 		if err != nil {
 			return err
 		}
-		task.Id = taskId
+		task.ID = taskID
 
 		*tasklist = append(*tasklist, task)
-		taskId++
+		taskID++
 	}
 	if err := scanner.Err(); err != nil {
 		return err
